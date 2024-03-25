@@ -1,12 +1,12 @@
 const express = require('express')
-const { mongoose } = require('mongoose')
 const dotenv = require('dotenv')
 const cors = require('cors')
 const multer = require('multer')
 const cookieParser = require('cookie-parser')
 const path=require("path")
+const connectDB = require("./config/db")
 
-
+// import routes
 const authRoute = require("./routes/auth")
 const userRoute = require("./routes/users")
 const postRoute = require("./routes/posts")
@@ -15,19 +15,6 @@ const postRoute = require("./routes/posts")
 
 const app = express()
 
-
-// database connection
-
-const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGODB_URL)
-
-        console.log('DB connected Successfully!');
-
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 // middlewares
 app.use(express.json())
@@ -50,6 +37,7 @@ const storage=multer.diskStorage({
     }
 })
 
+// image route
 const upload=multer({storage:storage})
 app.post("/api/upload",upload.single("file"),(req,res)=>{
     // console.log(req.body)
